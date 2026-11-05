@@ -4,6 +4,7 @@ import AppKit
 struct HistoryListView: View {
     @ObservedObject var store: ClipboardHistoryStore
     let onSelect: () -> Void
+    @State private var launchAtLogin = LaunchAtLogin.isEnabled
 
     var body: some View {
         VStack(spacing: 0) {
@@ -49,18 +50,37 @@ struct HistoryListView: View {
 
             Divider()
 
-            HStack {
-                Text("Click an item to copy it")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Button("Clear") { store.clearAll() }
-                    .disabled(store.items.isEmpty)
-                Button("Quit") { NSApp.terminate(nil) }
+            VStack(spacing: 6) {
+                HStack {
+                    Toggle("Launch at Login", isOn: launchAtLoginBinding)
+                        .toggleStyle(.checkbox)
+                        .font(.caption)
+                    Spacer()
+                }
+                HStack {
+                    Text("Click an item to copy it")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Clear") { store.clearAll() }
+                        .disabled(store.items.isEmpty)
+                    Button("Quit") { NSApp.terminate(nil) }
+                }
             }
             .padding(10)
         }
         .frame(width: 380, height: 420)
+        .onAppear { launchAtLogin = LaunchAtLogin.isEnabled }
+    }
+
+    private var launchAtLoginBinding: Binding<Bool> {
+        Binding(
+            get: { launchAtLogin },
+            set: { newValue in
+                try? LaunchAtLogin.setEnabled(newValue)
+                launchAtLogin = LaunchAtLogin.isEnabled // reflect the real state if registration failed
+            }
+        )
     }
 
     /// A closure that copies `item` to the clipboard as plain text, or `nil` when the item has no

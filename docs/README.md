@@ -37,6 +37,7 @@ Classic AppKit `NSStatusItem` + `NSPopover` hosting a SwiftUI view — chosen ov
 | `ClipboardItem.swift` | The model: `id` / `date` / `.text` or `.image` content, plus preview text and equality. |
 | `StatusItemController.swift` | Owns the status item (surfboard icon) and the popover. |
 | `HistoryListView.swift` / `HistoryRowView.swift` | SwiftUI history list and rows. |
+| `LaunchAtLogin.swift` | `SMAppService.mainApp` wrapper behind the "Launch at Login" checkbox (works from the installed `.app` only). |
 | `SurfboardIcon.swift` | Programmatic surfboard silhouette rendered as a template menu-bar image. |
 
 Persistence lives at `~/Library/Application Support/Boarder/history.json`. Both the storage
