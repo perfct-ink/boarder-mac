@@ -1,4 +1,4 @@
-.PHONY: build test dev app clean
+.PHONY: build test dev app install clean
 
 build:
 	swift build --disable-sandbox
@@ -16,6 +16,14 @@ dev: build
 # Release build, .app bundle, ad-hoc codesign - see Scripts/build_app.sh for details.
 app:
 	Scripts/build_app.sh
+
+# Build the release app bundle and install it into /Applications.
+install: app
+	@pkill -x Boarder 2>/dev/null || true
+	@sleep 0.3
+	rm -rf /Applications/Boarder.app
+	cp -R Boarder.app /Applications/Boarder.app
+	@echo "Installed /Applications/Boarder.app"
 
 clean:
 	rm -rf .build Boarder.app
